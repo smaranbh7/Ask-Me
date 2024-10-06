@@ -7,6 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../../../components/ui/dialog';
+import { Button } from '../../../components/ui/button';
+
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -25,6 +27,11 @@ function AddNewInterview() {
             <DialogDescription>
               This action cannot be undone. This will permanently delete your account
               and remove your data from our servers.
+              <div className='flex gap-5 justify-end'>
+                {/*Variant ghost makes the button backgound disappear */}
+                 <Button variant="ghost" onClick={()=>setOpenDialog(false)}>Cancel</Button>
+                 <Button>Start Interview</Button>
+              </div>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
