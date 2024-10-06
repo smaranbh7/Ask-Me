@@ -29,7 +29,7 @@ function Interview({ params }) {
   }
 
   return (
-    <div className='my-10 flex justify-center flex-col items-center'>
+    <div className='my-10'>
       <h2 className='font-bold text-2xl'>Let's Get Started</h2>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
 
@@ -59,12 +59,16 @@ function Interview({ params }) {
           ) : (
             <>
               <WebcamIcon className='h-72 w-full my-7 p-20 bg-secondary rounded-lg border'/>
-              <Button className="w-full" onClick={() => setWebcamEnabled(true)}>
-                Enable Web cam and Microphone
+              <Button  className="w-full" onClick={() => setWebcamEnabled(true)}>
+               Click Here To Enable Web cam and Microphone
               </Button>
             </>
           )}
         </div>
+        
+      </div>
+      <div className='flex justify-start items-end'>
+        <Button >Start Interview</Button>
       </div>
     </div>
   )
