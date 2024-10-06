@@ -12,6 +12,12 @@ import { Button } from '../../../components/ui/button';
 import { Textarea } from '../../../components/ui/textarea';
 import { chatSession } from '../../../utils/GeminiAIModel';
 import { LoaderCircle } from 'lucide-react';
+import { db } from '../../../utils/db'
+import { MockInterview } from '../../../utils/schema'
+import { v4 as uuidv4 } from 'uuid';
+import { useUser } from '@clerk/nextjs';
+import moment from 'moment';
+
 
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false);
@@ -19,27 +25,49 @@ function AddNewInterview() {
   const [jobDesc, setJobDesc] = useState(''); // Default empty string
   const [jobExperience, setJobExperience] = useState(''); // Default empty string
   const [loading, setLoading] = useState(false);
+  const [jsonResponse, setJsonResponse]=useState([]);
+  const {user}= useUser();
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e) => { 
     e.preventDefault();
     setLoading(true);
     
     console.log(jobPosition, jobDesc, jobExperience);
 
     const InputPrompt = `Job position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Depending on Job Position, Job Description & Years of Experience, give us ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT} interview questions with answers in JSON format. Provide a 'question' and 'answer' field in the JSON.`;
-
+    
     try {
       const result = await chatSession.sendMessage(InputPrompt);
-      const MockJsonResp = (await result.response.text())
+      const MockJsonResp = (result.response.text())
         .replace('```json', '')
         .replace('```', '');
 
       console.log(JSON.parse(MockJsonResp));
-    } catch (error) {
-      console.error("Error generating interview questions:", error);
-    }
 
-    setLoading(false);
+      if (MockJsonResp) {
+        // Database
+        const mockId = uuidv4(); // Generate the ID before insertion
+        const resp = await db.insert(MockInterview)
+          .values({
+            mockId: mockId, // Use lowercase 'd' to match your schema
+            jsonMockResp: MockJsonResp,
+            jobPosition: jobPosition,
+            jobDesc: jobDesc,
+            jobExperience: jobExperience,
+            createdBy: user?.primaryEmailAddress?.emailAddress,
+            createdAt: moment().format('DD-MM-YYYY')
+          })
+          .returning({ mockId: MockInterview.mockId }); // Use lowercase 'd' here as well
+
+        console.log("Inserted ID:", resp);
+      } else {
+        console.log("Error: No response data");
+      }
+    } catch (error) {
+      console.error("Error during submission:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
