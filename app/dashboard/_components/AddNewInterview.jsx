@@ -28,22 +28,28 @@ function AddNewInterview() {
           <DialogHeader>
             <DialogTitle className='text-2xl'>Tell us more about your job interview.</DialogTitle>
             <DialogDescription>
+              <form>
               <div>
                 <h2>Add Details about your job position/role, Job description and years of experience</h2>
               </div>
               <div className='mt-7 my-3'>
                 <label>Job Role/Position</label>
-                <Input placeholder='Ex. Full Stack Developer'/>
+                <Input placeholder='Ex. Full Stack Developer' required/>
               </div>
               <div className='mt-7 my-3'>
                 <label>Job Description/Tech Stack</label>
-                <Textarea placeholder="Ex. React, NodeJs, Mongo DB" />
+                <Textarea placeholder="Ex. React, NodeJs, Mongo DB" required/>
+              </div>
+              <div className='mt-7 my-3'>
+                <label>Years of Experience </label>
+                <Input placeholder='Ex. 5' type="number" max='100' required/>
               </div>
               <div className='flex gap-5 justify-end'>
                 {/*Variant ghost makes the button backgound disappear */}
-                 <Button variant="ghost" onClick={()=>setOpenDialog(false)}>Cancel</Button>
-                 <Button>Start Interview</Button>
+                 <Button type="button" variant="ghost" onClick={()=>setOpenDialog(false)}>Cancel</Button>
+                 <Button type="submit">Start Interview</Button>
               </div>
+              </form>
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
