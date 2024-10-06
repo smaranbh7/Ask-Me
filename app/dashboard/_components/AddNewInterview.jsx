@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { Input } from '../../../components/ui/input';
 import { 
   Dialog,
   DialogContent,
@@ -8,6 +9,8 @@ import {
   DialogDescription,
 } from '../../../components/ui/dialog';
 import { Button } from '../../../components/ui/button';
+import { Textarea } from '../../../components/ui/textarea';
+
 
 
 function AddNewInterview() {
@@ -21,12 +24,21 @@ function AddNewInterview() {
         <h2 className='text-lg'>+ Add New</h2>
       </div>
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
+        <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogTitle className='text-2xl'>Tell us more about your job interview.</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              <div>
+                <h2>Add Details about your job position/role, Job description and years of experience</h2>
+              </div>
+              <div className='mt-7 my-3'>
+                <label>Job Role/Position</label>
+                <Input placeholder='Ex. Full Stack Developer'/>
+              </div>
+              <div className='mt-7 my-3'>
+                <label>Job Description/Tech Stack</label>
+                <Textarea placeholder="Ex. React, NodeJs, Mongo DB" />
+              </div>
               <div className='flex gap-5 justify-end'>
                 {/*Variant ghost makes the button backgound disappear */}
                  <Button variant="ghost" onClick={()=>setOpenDialog(false)}>Cancel</Button>
