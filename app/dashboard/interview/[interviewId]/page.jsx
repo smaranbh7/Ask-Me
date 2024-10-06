@@ -42,8 +42,8 @@ function Interview({ params }) {
               <h2><strong>Years of Experience:</strong> {interviewData?.jobExperience}</h2>
             </div>
             <div className='p-5 border rounded-lg border-yellow-300 bg-yellow-100'>
-             <h2 className='flex gap-2 items-center'><Lightbulb /> <strong>Information</strong></h2> 
-              <h2>{process.env.NEXT_PUBLIC_INFORMATION}</h2>
+             <h2 className='flex gap-2 items-center text-yellow-500'><Lightbulb /> <strong>Information</strong></h2> 
+              <h2 className='mt-3 text-yellow-600'>{process.env.NEXT_PUBLIC_INFORMATION}</h2>
             </div>
           
         </div>
