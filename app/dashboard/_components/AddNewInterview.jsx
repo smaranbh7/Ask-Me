@@ -17,6 +17,7 @@ import { MockInterview } from '../../../utils/schema'
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
+import { useRouter } from 'next/navigation';
 
 
 function AddNewInterview() {
@@ -26,6 +27,7 @@ function AddNewInterview() {
   const [jobExperience, setJobExperience] = useState(''); // Default empty string
   const [loading, setLoading] = useState(false);
   const [jsonResponse, setJsonResponse]=useState([]);
+  const router = useRouter();
   const {user}= useUser();
 
   const onSubmit = async (e) => { 
@@ -46,10 +48,10 @@ function AddNewInterview() {
 
       if (MockJsonResp) {
         // Database
-        const mockId = uuidv4(); // Generate the ID before insertion
+        const mockId = uuidv4(); 
         const resp = await db.insert(MockInterview)
           .values({
-            mockId: mockId, // Use lowercase 'd' to match your schema
+            mockId: mockId, 
             jsonMockResp: MockJsonResp,
             jobPosition: jobPosition,
             jobDesc: jobDesc,
@@ -57,17 +59,21 @@ function AddNewInterview() {
             createdBy: user?.primaryEmailAddress?.emailAddress,
             createdAt: moment().format('DD-MM-YYYY')
           })
-          .returning({ mockId: MockInterview.mockId }); // Use lowercase 'd' here as well
-
+          .returning({ mockId: MockInterview.mockId }); 
         console.log("Inserted ID:", resp);
+        if(resp) 
+        {
+          setOpenDialog(false);
+          router.push('/dashboard/interview/'+resp[0]?.mockId)
+        }
       } else {
         console.log("Error: No response data");
       }
-    } catch (error) {
-      console.error("Error during submission:", error);
-    } finally {
-      setLoading(false);
-    }
+      } catch (error) {
+        console.error("Error during submission:", error);
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (
