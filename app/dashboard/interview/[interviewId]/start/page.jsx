@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { db } from '../../../../../utils/db';
 import { MockInterview } from '../../../../../utils/schema';
 import { eq } from 'drizzle-orm';
-import  QuestionsSection  from './_components/QuestionsSection'
+import QuestionsSection from './_components/QuestionsSection'
+import RecordAnswer from './_components/RecordAnswer'
 
 function StartInterview({params}) {
 
@@ -23,12 +24,13 @@ function StartInterview({params}) {
       }
   return (
     <div>
-      <div className='grid grid-cols-1 md:grid-cols-2'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
         {/* Questions*/}    
         <QuestionsSection
          mockInterviewQuestion={mockInterviewQuestion}
          activeQuestionIndex={activeQuestionIndex} />
         {/*Video/Audio Recording */}
+        <RecordAnswer />
      </div>
     </div>
   )
