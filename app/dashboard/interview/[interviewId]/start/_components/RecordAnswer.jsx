@@ -6,8 +6,9 @@ import { Button } from '../../../../../../components/ui/button';
 import useSpeechToText from 'react-hook-speech-to-text';
 import { Mic } from 'lucide-react';
 import { toast } from 'sonner';
+import { chatSession } from '../../../../../../utils/GeminiAIModel';
 
-function RecordAnswer() {
+function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
     const [userAnswer, setUserAnswer] = useState('');
     const {
         isRecording,
@@ -27,13 +28,26 @@ function RecordAnswer() {
         });
     }, [results]);
 
-    const SaveUserAnswer=()=>{
+    const SaveUserAnswer=async()=>{
         if(isRecording){
             stopSpeechToText();
             if(userAnswer?.length<10){
-                toast('Error while saving your anser. Please record again')
+                toast('Error while saving your anser. Please record again.')
                  return ;
             }
+
+            const feedbackPrompt="Question:"+mockInterviewQuestion[activeQuestionIndex]?.question+
+            ", User Answer:"+userAnswer+",Depending on question and user answer for the given question"+
+            " please give us rating for answer and feedback as area of improvement if any"+
+            "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
+
+            const result= await chatSession.sendMessage(feedbackPrompt);
+
+            const mockJsonResp=(result.response.text())
+            .replace('```json', '')
+            .replace('```', '');
+            console.log(mockJsonResp)
+
         }else{
             startSpeechToText();
         }
