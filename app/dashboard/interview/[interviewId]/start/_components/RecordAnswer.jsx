@@ -38,7 +38,7 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
 
             const feedbackPrompt="Question:"+mockInterviewQuestion[activeQuestionIndex]?.question+
             ", User Answer:"+userAnswer+",Depending on question and user answer for the given question"+
-            " please give us rating for answer and feedback as area of improvement if any"+
+            " please give us rating for answer out of 10 and feedback as area of improvement if any"+
             "in just 3 to 5 lines to improve it in JSON format with rating field and feedback field"
 
             const result= await chatSession.sendMessage(feedbackPrompt);
@@ -46,7 +46,8 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
             const mockJsonResp=(result.response.text())
             .replace('```json', '')
             .replace('```', '');
-            console.log(mockJsonResp)
+            console.log(mockJsonResp);
+            const JsonFeedbackResponse=JSON.parse(mockJsonResp);
 
         }else{
             startSpeechToText();
