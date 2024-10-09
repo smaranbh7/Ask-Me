@@ -4,12 +4,16 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '../../../../../../components/ui/button';
 import useSpeechToText from 'react-hook-speech-to-text';
-import { Mic } from 'lucide-react';
+import { Mic, StopCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { chatSession } from '../../../../../../utils/GeminiAIModel';
+import { useUser } from '@clerk/nextjs';
+import moment from 'moment';
 
-function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
+function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
     const [userAnswer, setUserAnswer] = useState('');
+    const {user}=useUser();
+    const[loading,setLoading]=useState(false);
     const {
         isRecording,
         results,
@@ -30,8 +34,10 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
 
     const SaveUserAnswer=async()=>{
         if(isRecording){
+            setLoading(true);
             stopSpeechToText();
             if(userAnswer?.length<10){
+                setLoading(false);
                 toast('Error while saving your anser. Please record again.')
                  return ;
             }
@@ -49,6 +55,21 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
             console.log(mockJsonResp);
             const JsonFeedbackResponse=JSON.parse(mockJsonResp);
 
+            const resp=await db.insert(userAnswer)
+            .values({
+                mockIdRef:interviewData.mockId,
+                question:mockInterviewQuestion[activeQuestionIndex]?.question,
+                correctAns:mockInterviewQuestion[activeQuestionIndex]?.answer,
+                userAns:userAnswer,
+                feedback:JsonFeedbackResponse?.feedback,
+                rating:JsonFeedbackResponse?.rating,
+                userEmail:user?.primaryEmailAddress?.emailAddress,
+                createdAt:moment().format('MM-DD-YYYY') ,
+            })
+            if(resp){
+                toast('User Answer recorded successfully')
+            }
+            setLoading(false);
         }else{
             startSpeechToText();
         }
@@ -67,17 +88,18 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex) {
                     }}
                 />
             </div>
-            <Button variant='outline' className='my-10'
+            <Button
+            disabled={loading}
+            variant='outline' className='my-10'
                 onClick={SaveUserAnswer}
             >
-                {isRecording ? (
+                {isRecording ? 
                     <h2 className='text-red-600 flrx gap-2'>
-                        <Mic /> Stop Recording
+                        <StopCircle /> Stop Recording
                     </h2>
-                ) : (
-                    'Record Answer'
-                )}
-            </Button>
+                 : 
+                    <h2 className='text-primary flex-gap-2 items-center'>
+                        <Mic/> Record Answer</h2>}</Button>
             <Button onClick={() => console.log(userAnswer)}>Show User Answer</Button>
         </div>
     );

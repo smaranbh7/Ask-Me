@@ -33,6 +33,7 @@ function StartInterview({params}) {
         <RecordAnswer 
          mockInterviewQuestion={mockInterviewQuestion}
          activeQuestionIndex={activeQuestionIndex} 
+         interviewData={interviewData}
         />
      </div>
     </div>
