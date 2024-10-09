@@ -4,8 +4,12 @@ import React from 'react'
 function QuestionsSection({mockInterviewQuestion,activeQuestionIndex}) {
 
     const textToSpeach=(text)=>{
+         //speechSynthesis property is available in the window object, which indicates that the browser supports the Speech Synthesis API.
         if('speechSynthesis' in window){
+            //SpeechSynthesisUtterance is an object that represents a speech request.
+            // It contains the text to be spoken and additional properties such as language, pitch, and rate.
             const speech= new SpeechSynthesisUtterance(text);
+            // speak is a method of the speechSynthesis object to speak the text represented by the speech object.
             window.speechSynthesis.speak(speech)
         }else{
             alert('Sorry, Your browser does not support text to speech')
