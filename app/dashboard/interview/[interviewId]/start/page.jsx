@@ -5,6 +5,7 @@ import { MockInterview } from '../../../../../utils/schema';
 import { eq } from 'drizzle-orm';
 import QuestionsSection from './_components/QuestionsSection'
 import RecordAnswer from './_components/RecordAnswer'
+import { Button } from '../../../../../components/ui/button';
 
 function StartInterview({params}) {
 
@@ -35,6 +36,11 @@ function StartInterview({params}) {
          activeQuestionIndex={activeQuestionIndex} 
          interviewData={interviewData}
         />
+     </div>
+     <div className='flex justify-end gap-6'>
+      <Button>Previous Question</Button>
+      <Button>Next Question</Button>
+      <Button>End Interview</Button>
      </div>
     </div>
   )
