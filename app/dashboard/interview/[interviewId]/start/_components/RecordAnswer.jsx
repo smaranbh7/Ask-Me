@@ -9,8 +9,12 @@ import { toast } from 'sonner';
 import { chatSession } from '../../../../../../utils/GeminiAIModel';
 import { useUser } from '@clerk/nextjs';
 import moment from 'moment';
+import { db } from '../../../../../../utils/db';
+import {  UserAnswer, MockInterview } from '../../../../../../utils/schema'
 
-function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
+
+
+function RecordAnswer({ mockInterviewQuestion, activeQuestionIndex, interviewData }) {
     const [userAnswer, setUserAnswer] = useState('');
     const {user}=useUser();
     const[loading,setLoading]=useState(false);
@@ -32,16 +36,30 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
         });
     }, [results]);
 
-    const SaveUserAnswer=async()=>{
+    useEffect(()=>{
+        if(!isRecording&&userAnswer.length>10){
+            UpdateUserAnswer();
+        }
+    },[userAnswer])
+
+    const StartStopRecording=async()=>{
         if(isRecording){
-            setLoading(true);
+            
             stopSpeechToText();
             if(userAnswer?.length<10){
                 setLoading(false);
                 toast('Error while saving your anser. Please record again.')
                  return ;
-            }
-
+            }         
+        }else{
+            startSpeechToText();
+        }
+    }
+    
+    const UpdateUserAnswer=async()=>{
+        try {
+            console.log(userAnswer)
+            setLoading(true);
             const feedbackPrompt="Question:"+mockInterviewQuestion[activeQuestionIndex]?.question+
             ", User Answer:"+userAnswer+",Depending on question and user answer for the given question"+
             " please give us rating for answer out of 10 and feedback as area of improvement if any"+
@@ -55,7 +73,7 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
             console.log(mockJsonResp);
             const JsonFeedbackResponse=JSON.parse(mockJsonResp);
 
-            const resp=await db.insert(userAnswer)
+            const resp= await db.insert( UserAnswer)
             .values({
                 mockIdRef:interviewData.mockId,
                 question:mockInterviewQuestion[activeQuestionIndex]?.question,
@@ -66,12 +84,16 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
                 userEmail:user?.primaryEmailAddress?.emailAddress,
                 createdAt:moment().format('MM-DD-YYYY') ,
             })
+
             if(resp){
-                toast('User Answer recorded successfully')
+                toast.success('User Answer recorded successfully')
             }
+        } catch (error) {
+            console.error('Error updating user answer:', error);
+            toast.error('Failed to record user answer. Please try again.');
+        } finally {
+            setUserAnswer('');
             setLoading(false);
-        }else{
-            startSpeechToText();
         }
     }
 
@@ -91,15 +113,16 @@ function RecordAnswer(mockInterviewQuestion,activeQuestionIndex,interviewData) {
             <Button
             disabled={loading}
             variant='outline' className='my-10'
-                onClick={SaveUserAnswer}
+                onClick={StartStopRecording}
             >
                 {isRecording ? 
-                    <h2 className='text-red-600 flrx gap-2'>
+                    <h2 className='text-red-600 flex gap-2'>
                         <StopCircle /> Stop Recording
                     </h2>
                  : 
                     <h2 className='text-primary flex-gap-2 items-center'>
                         <Mic/> Record Answer</h2>}</Button>
+            {loading && <p>Processing your answer...</p>}
             <Button onClick={() => console.log(userAnswer)}>Show User Answer</Button>
         </div>
     );
