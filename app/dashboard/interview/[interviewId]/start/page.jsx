@@ -6,6 +6,7 @@ import { eq } from 'drizzle-orm';
 import QuestionsSection from './_components/QuestionsSection'
 import RecordAnswer from './_components/RecordAnswer'
 import { Button } from '../../../../../components/ui/button';
+import Link from 'next/link';
 
 function StartInterview({params}) {
 
@@ -46,7 +47,10 @@ function StartInterview({params}) {
       <Button  
       onClick={()=>setActiveQuestionIndex(activeQuestionIndex+1)}
       >Next Question</Button>}
-      {activeQuestionIndex==mockInterviewQuestion?.length-1 && <Button>End Interview</Button>}
+      {activeQuestionIndex==mockInterviewQuestion?.length-1 && 
+      <Link href={'/dashboard/interview/inter'+interviewData?.mockId+"/feedback"}>
+      <Button>End Interview</Button>
+      </Link>}
      </div>
     </div>
   )
