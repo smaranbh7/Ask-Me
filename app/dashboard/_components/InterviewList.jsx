@@ -13,17 +13,20 @@ function InterviewList() {
     useEffect(() => {
        if (user?.primaryEmailAddress) {
            GetInterviewList();
+           
+
        }
     }, [user]);
 
     const GetInterviewList = async () => {
         const result = await db.select()
             .from(MockInterview)
-            //.where(eq(MockInterview.createdBy, user.primaryEmailAddress))    
+            .where(eq(MockInterview.createdBy, user.primaryEmailAddress.emailAddress))    
             .orderBy(desc(MockInterview.id));
         
         setInterviewList(result);
         console.log(result);
+        
     };
 
     return (
@@ -32,6 +35,7 @@ function InterviewList() {
             <div className='grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5 my-3'>
                 {interviewList.map((interview, index) => (
                     <InterviewItemCard key={interview.id} interview={interview} />
+                    
                 ))}
             </div>
         </div>
