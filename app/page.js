@@ -12,12 +12,12 @@ export default function Home() {
           Your AI-powered mock interview assistant. Practice, improve, and ace your next job interview!
         </p>
         <div className="space-y-4 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row justify-center">
-          <Link href="/#">
+          <Link href="/dashboard">
             <Button size="lg" className="w-full sm:w-auto">
               Sign In
             </Button>
           </Link>
-          <Link href="/#">
+          <Link href="/dashboard">
             <Button size="lg" variant="outline" className="w-full sm:w-auto">
               Sign Up
             </Button>
