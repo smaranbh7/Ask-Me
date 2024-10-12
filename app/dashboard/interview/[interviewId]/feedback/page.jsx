@@ -38,7 +38,7 @@ function Feedback({ params }) {
           <h2 className='text-2xl font-bold text-green-500'>Congratulations!</h2>
           <h2 className='font-bold text-2xl'>Here is your interview feedback</h2>
 
-          <h2 className='text-primary text-lg my-3'>Your overall interview rating: <strong>7/10</strong></h2>
+          <h2 className='text-primary text-lg my-3'>Your overall interview rating: <strong>X/10</strong></h2>
 
           <h2 className='text-sm text-gray-500'>Find asked questions with your answers, preferred answers, and feedbacks below:</h2>
           {feedbackList.map((item, index) => (
