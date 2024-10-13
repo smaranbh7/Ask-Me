@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 function Feedback({ params }) {
   const router = useRouter();
   const [feedbackList, setFeedbackList] = useState([]);
+  const [overallRating, setOverallRating] = useState('X');
 
   useEffect(() => {
     GetFeedback();
@@ -24,6 +25,13 @@ function Feedback({ params }) {
 
     console.log(result);
     setFeedbackList(result);
+
+    // Calculate overall rating
+    if (result.length > 0) {
+      const totalRating = result.reduce((sum, item) => sum + parseFloat(item.rating), 0);
+      const averageRating = (totalRating / result.length).toFixed(1);
+      setOverallRating(averageRating);
+    }
   };
 
   return (
@@ -38,7 +46,7 @@ function Feedback({ params }) {
           <h2 className='text-2xl font-bold text-green-500'>Congratulations!</h2>
           <h2 className='font-bold text-2xl'>Here is your interview feedback</h2>
 
-          <h2 className='text-primary text-lg my-3'>Your overall interview rating: <strong>X/10</strong></h2>
+          <h2 className='text-primary text-lg my-3'>Your overall interview rating: <strong>{overallRating}/10</strong></h2>
 
           <h2 className='text-sm text-gray-500'>Find asked questions with your answers, preferred answers, and feedbacks below:</h2>
           {feedbackList.map((item, index) => (
