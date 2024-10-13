@@ -18,11 +18,17 @@ function QuestionsSection({mockInterviewQuestion,activeQuestionIndex}) {
   return mockInterviewQuestion&&(
     <div className='p-5 border rounded-lg my-10'>
         <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
-            {/*If the index and the index from the page component matches, show blue background to active question number */}
-            {mockInterviewQuestion && mockInterviewQuestion.map((question,index)=>(
-                <h2 className={`p-2 bg-secondary rounded-full 
-                text-xs md:text-sm text-center cursor-pointer
-                ${activeQuestionIndex==index && 'bg-blue-200 text-black'}`}>Question #{index+1}</h2>
+            {mockInterviewQuestion && mockInterviewQuestion.map((question, index) => (
+                <h2 
+                    key={index}
+                    className={`p-2 rounded-full text-xs md:text-sm text-center cursor-pointer
+                    ${activeQuestionIndex === index 
+                        ? 'bg-blue-100 text-black' 
+                        : 'bg-secondary text-black'
+                    }`}
+                >
+                    Question #{index + 1}
+                </h2>
             ))}
         </div>
         <h2 className='my-5 text-m md:text-lg'>{mockInterviewQuestion[activeQuestionIndex]?.question}</h2>  
