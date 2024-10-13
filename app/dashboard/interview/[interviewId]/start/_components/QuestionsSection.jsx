@@ -27,7 +27,7 @@ function QuestionsSection({mockInterviewQuestion,activeQuestionIndex}) {
                         : 'bg-secondary text-black'
                     }`}
                 >
-                    Question #{index + 1}
+                    Question {index + 1}
                 </h2>
             ))}
         </div>
