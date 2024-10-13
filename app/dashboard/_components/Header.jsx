@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import Image from 'next/image'; 
 import { UserButton } from '@clerk/nextjs';
 import { usePathname } from 'next/navigation';
-
+import Link from 'next/link';
 const Header = () => {
 
     const path = usePathname();
@@ -14,11 +14,13 @@ const Header = () => {
   return (
    
     <div className='flex p-4 items-center justify-between bg-secondary shadow-small'>
-      <Image src="/logo.svg" width={160} height={100} alt="logo" />
+      <Link href="/dashboard">
+      <Image src="/logo.svg" className='cursor-pointer' width={160} height={100} alt="logo" />
+      </Link>
       {/*  Responsive nav */} 
       <ul className='hidden md:flex gap-6'>
         <li 
-        className={`hover:text-primary hover:font-bold transition-all cursor-pointer
+        className={`hover:text-primary hover:font-bold transition-all cursor-pointer justify-center
          ${path=='/dashboard'&& 'text-primary font-bold'}   
         `}
         >Dashboard</li>
