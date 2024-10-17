@@ -34,25 +34,14 @@ function InterviewItemCard({ interview }) {
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 ease-in-out">
-      <div className="p-6">
-        <h3 className="font-bold text-xl text-primary mb-2">{interview?.jobPosition}</h3>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Briefcase className="w-4 h-4 mr-2" />
-          <p className="text-sm">{interview?.jobExperience} Year(s) of Experience</p>
-        </div>
-        <div className="flex items-center text-gray-600 mb-2">
-          <Clock className="w-4 h-4 mr-2" />
-          <p className="text-sm">Created: {new Date(interview.createdAt).toLocaleDateString()}</p>
-        </div>
-        <div className="flex items-center text-gray-600 mb-4">
-          <Star className="w-4 h-4 mr-2 text-yellow-500" />
-          <p className="text-sm font-semibold">Score: {averageRating}/10</p>
-        </div>
-        <div className='flex justify-between mt-4'> 
-          <Button size="sm" variant="outline" onClick={onFeedback} className="flex-1 mr-2">View Feedback</Button>
-          <Button size="sm" onClick={onStart} className="flex-1 ml-2 bg-primary hover:bg-primary-dark">Start Interview</Button>
-        </div>
+    <div className="border p-4 mb-4 rounded-lg shadow-sm">
+    <h3 className="font-bold text-primary">{interview?.jobPosition}</h3>
+    <p className="text-sm text-gray-600">{interview?.jobExperience}  Year(s) of Experience</p>
+    <p className="text-sm text-gray-600">Created At: {(interview.createdAt)}</p>
+    <p className="text-sm text-gray-600">Overall Score: {averageRating}</p>
+    <div className='flex justify-between my-2'> 
+      <Button size="sm" variant="outline" onClick={onFeedback}>Feedback</Button>
+      <Button size="sm" onClick={onStart}>Start</Button>
       </div>
     </div>
   )
