@@ -1,47 +1,59 @@
-import { Lightbulb, Volume2 } from 'lucide-react'
+import { Lightbulb, Volume2, HelpCircle } from 'lucide-react'
 import React from 'react'
 
-function QuestionsSection({mockInterviewQuestion,activeQuestionIndex}) {
-
-    const textToSpeach=(text)=>{
-         //speechSynthesis property is available in the window object, which indicates that the browser supports the Speech Synthesis API.
-        if('speechSynthesis' in window){
-            //SpeechSynthesisUtterance is an object that represents a speech request.
-            // It contains the text to be spoken and additional properties such as language, pitch, and rate.
-            const speech= new SpeechSynthesisUtterance(text);
-            // speak is a method of the speechSynthesis object to speak the text represented by the speech object.
+function QuestionsSection({mockInterviewQuestion, activeQuestionIndex}) {
+    const textToSpeech = (text) => {
+        if ('speechSynthesis' in window) {
+            const speech = new SpeechSynthesisUtterance(text);
             window.speechSynthesis.speak(speech)
-        }else{
-            alert('Sorry, Your browser does not support text to speech')
+        } else {
+            alert('Sorry, your browser does not support text to speech')
         }
     }
-  return mockInterviewQuestion&&(
-    <div className='p-5 border rounded-lg my-10'>
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5'>
-            {mockInterviewQuestion && mockInterviewQuestion.map((question, index) => (
-                <h2 
-                    key={index}
-                    className={`p-2 rounded-full text-xs md:text-sm text-center cursor-pointer
-                    ${activeQuestionIndex === index 
-                        ? 'bg-blue-100 text-black' 
-                        : 'bg-secondary text-black'
-                    }`}
-                >
-                    Question {index + 1}
-                </h2>
-            ))}
+
+    return mockInterviewQuestion && (
+        <div className='bg-white shadow-lg rounded-xl p-6 my-10'>
+            <h2 className='text-2xl font-bold mb-6 text-primary'>Interview Questions</h2>
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8'>
+                {mockInterviewQuestion.map((question, index) => (
+                    <button 
+                        key={index}
+                        className={`py-2 px-4 rounded-full text-sm font-medium transition-all duration-200 ease-in-out
+                        ${activeQuestionIndex === index 
+                            ? 'bg-primary text-white shadow-md transform scale-105' 
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                    >
+                        Q{index + 1}
+                    </button>
+                ))}
+            </div>
+            <div className='bg-gray-50 rounded-lg p-6 mb-6'>
+                <div className='flex justify-between items-start mb-4'>
+                    <h3 className='text-xl font-semibold text-gray-800'>
+                        {mockInterviewQuestion[activeQuestionIndex]?.question}
+                    </h3>
+                    <button 
+                        onClick={() => textToSpeech(mockInterviewQuestion[activeQuestionIndex]?.question)}
+                        className='text-primary hover:text-primary-dark transition-colors duration-200'
+                        title="Listen to question"
+                    >
+                        <Volume2 className='w-6 h-6' />
+                    </button>
+                </div>
+                <p className='text-gray-600 italic'>
+                    Click the speaker icon to hear the question read aloud.
+                </p>
+            </div>
+            <div className='bg-blue-50 rounded-lg p-6'>
+                <h3 className='flex items-center text-lg font-semibold text-blue-700 mb-3'>
+                    <Lightbulb className='w-5 h-5 mr-2'/>
+                    Important Note
+                </h3>
+                <p className='text-blue-600'>{process.env.NEXT_PUBLIC_QUESTION_NOTE}</p>
+            </div>
         </div>
-        <h2 className='my-5 text-m md:text-lg'>{mockInterviewQuestion[activeQuestionIndex]?.question}</h2>  
-        <Volume2 className='cursor-pointer' onClick={()=>textToSpeach(mockInterviewQuestion[activeQuestionIndex]?.question)} />
-        <div className='border rounded-lg p-5 bg-blue-100 mt-20'>
-            <h2 className='flex gap-2 items-center text-primary'>
-                <Lightbulb/>
-                <strong>Note:</strong>
-            </h2>
-            <h2 className='text-sm text-primary my-2'>{process.env.NEXT_PUBLIC_QUESTION_NOTE}</h2>
-        </div>
-    </div>
-  )
+    )
 }
 
 export default QuestionsSection
